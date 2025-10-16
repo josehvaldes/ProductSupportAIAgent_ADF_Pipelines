@@ -1,0 +1,22 @@
+{
+	"name": "3_product_archive",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "storage_stshopassistai01",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"container": "productsarchive"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": []
+	}
+}
