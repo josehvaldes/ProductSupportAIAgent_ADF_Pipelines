@@ -1,0 +1,2 @@
+# ProductSupportAIAgent_ADF_Pipelines
+Repository to store Azure Datafactor pipelines for ProductSupportAIAgent project
