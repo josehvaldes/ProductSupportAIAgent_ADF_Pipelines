@@ -1,0 +1,78 @@
+{
+	"name": "Remove_duplicated_Transform_CSV",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "1_clean_columns_products",
+						"type": "DatasetReference"
+					},
+					"name": "cleancolumnscontainer"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "2_nonduplicated_products",
+						"type": "DatasetReference"
+					},
+					"name": "copynonuplicated"
+				}
+			],
+			"transformations": [
+				{
+					"name": "aggregateremoveduplicated"
+				},
+				{
+					"name": "derivedcolumntransform"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          product_id as string,",
+				"          product_name as string,",
+				"          category as string,",
+				"          price as string,",
+				"          rating as integer,",
+				"          review_count as string,",
+				"          description as string,",
+				"          image_url as string,",
+				"          product_url as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     limit: 10,",
+				"     ignoreNoFilesFound: false,",
+				"     skipLines: 1) ~> cleancolumnscontainer",
+				"derivedcolumntransform aggregate(groupBy(product_id),",
+				"     product_name = first(product_name),",
+				"          category = first(category),",
+				"          price = first(price),",
+				"          rating = first(rating),",
+				"          review_count = first(review_count),",
+				"          description = first(description),",
+				"          image_url = first(image_url),",
+				"          product_url = first(product_url)) ~> aggregateremoveduplicated",
+				"cleancolumnscontainer derive(price = toDecimal(replace(price,'₹',''), 2),",
+				"          review_count = toInteger(replace(review_count, ',', ''))) ~> derivedcolumntransform",
+				"aggregateremoveduplicated sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          product_id as string,",
+				"          product_name as string,",
+				"          category as string,",
+				"          price as string,",
+				"          rating as string,",
+				"          review_count as string,",
+				"          description as string,",
+				"          image_url as string,",
+				"          product_url as string",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> copynonuplicated"
+			]
+		}
+	}
+}
