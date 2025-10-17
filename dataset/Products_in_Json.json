@@ -1,0 +1,18 @@
+{
+	"name": "Products_in_Json",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "storage_stshopassistai01",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Json",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"container": "productjson"
+			}
+		},
+		"schema": {}
+	}
+}
