@@ -1,5 +1,5 @@
 {
-	"name": "3_product_archive",
+	"name": "2_product_archive",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "storage_stshopassistai01",

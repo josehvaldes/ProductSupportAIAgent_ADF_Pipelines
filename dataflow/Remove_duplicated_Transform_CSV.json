@@ -6,7 +6,7 @@
 			"sources": [
 				{
 					"dataset": {
-						"referenceName": "1_clean_columns_products",
+						"referenceName": "ProductsRawSource",
 						"type": "DatasetReference"
 					},
 					"name": "cleancolumnscontainer"
@@ -15,7 +15,7 @@
 			"sinks": [
 				{
 					"dataset": {
-						"referenceName": "2_nonduplicated_products",
+						"referenceName": "1_nonduplicated_products",
 						"type": "DatasetReference"
 					},
 					"name": "copynonuplicated"
@@ -27,6 +27,9 @@
 				},
 				{
 					"name": "derivedcolumntransform"
+				},
+				{
+					"name": "selectusefullcolumns"
 				}
 			],
 			"scriptLines": [
@@ -34,12 +37,19 @@
 				"          product_id as string,",
 				"          product_name as string,",
 				"          category as string,",
-				"          price as string,",
+				"          discounted_price as string,",
+				"          actual_price as string,",
+				"          discount_percentage as string,",
 				"          rating as string,",
-				"          review_count as string,",
-				"          description as string,",
-				"          image_url as string,",
-				"          product_url as string",
+				"          rating_count as string,",
+				"          about_product as string,",
+				"          user_id as string,",
+				"          user_name as string,",
+				"          review_id as string,",
+				"          review_title as string,",
+				"          review_content as string,",
+				"          img_link as string,",
+				"          product_link as string",
 				"     ),",
 				"     allowSchemaDrift: false,",
 				"     validateSchema: false,",
@@ -47,7 +57,7 @@
 				"     ignoreNoFilesFound: false,",
 				"     wildcardPaths:['*.csv']) ~> cleancolumnscontainer",
 				"derivedcolumntransform aggregate(groupBy(product_id),",
-				"     product_name = first(product_name),",
+				"     product_name = first(title),",
 				"          category = first(category),",
 				"          price = first(price),",
 				"          rating = first(rating),",
@@ -55,8 +65,21 @@
 				"          description = first(description),",
 				"          image_url = first(image_url),",
 				"          product_url = first(product_url)) ~> aggregateremoveduplicated",
-				"cleancolumnscontainer derive(price = toFloat(replace(replace(price,'₹',''), ',', '')),",
+				"selectusefullcolumns derive(price = toFloat(replace(replace(price,'₹',''), ',', '')),",
 				"          review_count = toInteger(replace(review_count, ',', ''))) ~> derivedcolumntransform",
+				"cleancolumnscontainer select(mapColumn(",
+				"          product_id,",
+				"          title = product_name,",
+				"          category,",
+				"          price = actual_price,",
+				"          rating,",
+				"          review_count = rating_count,",
+				"          description = about_product,",
+				"          image_url = img_link,",
+				"          product_url = product_link",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> selectusefullcolumns",
 				"aggregateremoveduplicated sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     input(",

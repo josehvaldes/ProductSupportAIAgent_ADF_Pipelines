@@ -1,5 +1,5 @@
 {
-	"name": "2_nonduplicated_products",
+	"name": "1_nonduplicated_products",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "storage_stshopassistai01",
