@@ -23,7 +23,7 @@
 				"type": "String"
 			},
 			{
-				"name": "product_name",
+				"name": "title",
 				"type": "String"
 			},
 			{
